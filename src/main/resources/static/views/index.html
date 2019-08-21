@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Main Page</title>
+</head>
+<body ng-app="demo">
+<hr/>
+<form name="formUser"  class="container" ng-controller="UserController">
+    <div class="row">
+
+        <label>User</label> <input type="text" ng-model="userDto.login" class="input-sm spacing" required/>
+        <label>Email</label> <input name="userEmail" type="text" ng-model="userDto.email"  class="input-sm custom-width spacing"
+                                     placeholder="" ng-pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/" required/>
+        <ng-messages role="alert"
+                     ng-if="formUser.$invalid && formUser.userEmail.$error.pattern && (formUser.userEmail.$touched || formUser.$submitted)"
+                     for="formUser.userEmail.$error">
+            <ng-message when="pattern" class="label label-danger">Invalid email</ng-message>
+        </ng-messages>
+
+        <button ng-click="saveUser()" class="btn btn-sm btn-info" type="submit"
+                ng-disabled="formUser.$invalid">Save Email</button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Login</th>
+            <th scope="col">Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in allUsers">
+            <th scope="row">{{user.id}}</th>
+            <td>{{user.login}}</td>
+            <td>{{user.email}}</td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+<script src="js/lib/angular.min.js"></script>
+<script src="js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
+<script src="js/app/app.js"></script>
+<script src="js/app/UserController.js"></script>
+<script src="js/app/UserService.js"></script>
+<link rel="stylesheet" href="css/lib/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/app/app.css"/>
+</html>
