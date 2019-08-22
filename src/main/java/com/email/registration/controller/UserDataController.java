@@ -22,7 +22,6 @@ public class UserDataController {
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity<UserDto> addNewUser(@RequestBody UserDto newUser) {
         try {
-            userDataService.addUser(newUser);
             return new ResponseEntity<>(userDataService.addUser(newUser), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
