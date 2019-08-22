@@ -1,37 +1,48 @@
 package com.email.registration.service.impl;
 
 
+import com.email.registration.converter.UserConverter;
 import com.email.registration.domain.User;
 import com.email.registration.dto.UserDto;
 import com.email.registration.repository.UserRepository;
 import com.email.registration.service.UserDataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class UserDataServiceImpl implements UserDataService{
 
+    Logger logger = LoggerFactory.getLogger(UserDataServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserConverter userConverter;
 
     @Override
-    public UserDto addUser(UserDto newUser) {
-        User n = new User();
-        n.setLogin(newUser.getLogin());
-        n.setEmail(newUser.getEmail());
-        User savedUser = userRepository.save(n);
+    public UserDto addUser(UserDto userDto) {
+        if (userDto == null) {
+            throw new IllegalArgumentException("Trying tu creeate yuser with null value");
+        }
+        List<User> existingUsers = userRepository.findAllByLoginOrderByEmail(userDto.getLogin(), userDto.getEmail());
+        if (!CollectionUtils.isEmpty(existingUsers)) {
+            throw new IllegalArgumentException("User with this email or login already exists.");
+        }
+        User user = new User();
+        user.setLogin(userDto.getLogin());
+        user.setEmail(userDto.getEmail());
 
-        return new UserDto(savedUser.getId(),savedUser.getLogin(),savedUser.getEmail());
+        return userConverter.convert(userRepository.save(user));
     }
 
     @Override
     public List<UserDto> getUsers() {
-        List<User> all = userRepository.findAll();
-        List<UserDto> result = all.stream().map(c -> new UserDto(c.getId(),c.getLogin(),c.getEmail())).collect(Collectors.toList());
-        return result;
+        return userRepository.findAll().stream().map(userConverter::convert).collect(Collectors.toList());
     }
 }

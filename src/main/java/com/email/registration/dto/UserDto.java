@@ -1,20 +1,20 @@
 package com.email.registration.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.email.registration.utils.Constants;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 
 public class UserDto implements Serializable {
 
-
     private Long id;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @NotBlank
     private String login;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @NotBlank
+    @Pattern(regexp = Constants.EMAIL_PATTERN)
     private String email;
 
     public UserDto() {
