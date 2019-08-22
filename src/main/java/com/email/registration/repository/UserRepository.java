@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findAllByLoginOrderByEmail(@Param("login") String login, @Param("email") String email);
+    List<User> findByLoginOrEmail(@Param("login") String login, @Param("email") String email);
 
 }

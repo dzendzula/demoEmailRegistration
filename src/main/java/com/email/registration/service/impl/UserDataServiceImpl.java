@@ -28,9 +28,9 @@ public class UserDataServiceImpl implements UserDataService{
     @Override
     public UserDto addUser(UserDto userDto) {
         if (userDto == null) {
-            throw new IllegalArgumentException("Trying tu creeate yuser with null value");
+            throw new IllegalArgumentException("Trying to create user with null value");
         }
-        List<User> existingUsers = userRepository.findAllByLoginOrderByEmail(userDto.getLogin(), userDto.getEmail());
+        List<User> existingUsers = userRepository.findByLoginOrEmail(userDto.getLogin(), userDto.getEmail());
         if (!CollectionUtils.isEmpty(existingUsers)) {
             throw new IllegalArgumentException("User with this email or login already exists.");
         }
